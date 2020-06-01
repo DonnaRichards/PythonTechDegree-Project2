@@ -5,7 +5,7 @@ def clean_player(player):
     Clean the data for a single player:
     1. Name: as is
     2. Guardians: Modify to a list of strings, remove 'and' between names
-    3. Height: Conver to integer
+    3. Height: Convert to integer
     4. Experience: boolean value (True or False)
     """
     cleaned_player = {}
