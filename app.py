@@ -27,16 +27,6 @@ def clean_data(players):
     return cleaned_players
 
 
-def assign_team_numbers(teamnames):
-    """
-    Copy team names into a list of tuples which contain team name plus allocation of a sequential number
-    Used to populate menu options for user in the main_menu_selection function
-    """
-    teams = []
-    for index, team in enumerate(teamnames):
-        teams.append((team, index))
-    return teams
-
 def balance_teams(players, teams):
     """
     balance the players across the three teams: Panthers, Bandits and Warriors.
@@ -52,6 +42,7 @@ def balance_teams(players, teams):
             filled_teams[team].append(player)
     return filled_teams
 
+
 def main_menu_selection(teams):
     """
     Display program menu and get input from user
@@ -61,7 +52,7 @@ def main_menu_selection(teams):
     print("Here are your choices:")
     print("\n  Display Team Stats:")
     for team in teams:
-        print(f"    Enter {team[1]+1} for {team[0]}")
+        print(f"    Enter {teams.index(team) + 1} for {team}")
     print("\n  Any other key - Quit")
     choice = input("Enter an option > ")
     try:
@@ -100,10 +91,10 @@ def print_team(teamname, filled_team):
 
 if __name__ == "__main__":
     players = clean_data(constants.PLAYERS)
-    teams = assign_team_numbers(constants.TEAMS)
+#    teams = assign_team_numbers(constants.TEAMS)
     filled_teams = balance_teams(players, constants.TEAMS)
-    choice = main_menu_selection(teams)
-    while choice in range(len(teams)):
-        print_team(teams[choice][0], filled_teams[teams[choice][0]])
-        choice = main_menu_selection(teams)
+    choice = main_menu_selection(constants.TEAMS)
+    while choice in range(len(constants.TEAMS)):
+        print_team(constants.TEAMS[choice], filled_teams[constants.TEAMS[choice]])
+        choice = main_menu_selection(constants.TEAMS)
     print("Program finished, thank you and have a nice day")
