@@ -3,10 +3,10 @@ import constants
 def clean_player(player):
     """
     Clean the data for a single player:
-    1. Height: This should be saved as an integer
-    2. Experience: This should be saved as a boolean value (True or False)
-    :param player (dictionary, keys = name, guardians, height, experience):
-    :return: cleaned_player (same format dict as player)
+    1. Name: as is
+    2. Guardians: Modify to a list of strings, remove 'and' between names
+    3. Height: Conver to integer
+    4. Experience: boolean value (True or False)
     """
     cleaned_player = {}
     cleaned_player['name'] = player['name']
@@ -21,17 +21,7 @@ def clean_player(player):
 
 def clean_data(players):
     """
-    1) read the existing player data from the PLAYERS constants provided in constants.py
-    2) clean the player data without changing the original data (see note below)
-    3) save it to a new collection - build a new collection with what you have learned up to this point.
-
-    Data to be cleaned:
-
-    HINT: Think Lists with nested Dictionaries might be one way.
-
-    NOTE: Ensure you **do not directly modify the data in PLAYERS or TEAMS constants.
-    This data you should iterate and read from to build your own collection and would be
-    ideal to clean the data as you loop over it building your new collection.
+    Iterate over player data calling clean_player function for each to clean data
     """
     cleaned_players = [clean_player(player) for player in players]
     return cleaned_players
@@ -41,8 +31,6 @@ def assign_team_numbers(teamnames):
     """
     Copy team names into a list of tuples which contain team name plus allocation of a sequential number
     Used to populate menu options for user in the main_menu_selection function
-    :param teamnames: (list of names of teams)
-    :return: teams (list of tuples containing name of team plus allocated team number)
     """
     teams = []
     for index, team in enumerate(teamnames):
@@ -52,12 +40,6 @@ def assign_team_numbers(teamnames):
 def balance_teams(players, teams):
     """
     balance the players across the three teams: Panthers, Bandits and Warriors.
-    Make sure the teams have the same number of total players on them when your team balancing function has finished.
-    HINT: To find out how many players should be on each team, divide the length of players
-    by the number of teams. Ex: num_players_team = len(PLAYERS) / len(TEAMS)
-    :param players:
-    :param teams:
-    :return:
     """
     experienced_players = [player for player in players if player['experience']]
     inexperienced_players = [player for player in players if not player['experience']]
@@ -67,30 +49,40 @@ def balance_teams(players, teams):
         for player in experienced_players[index::len(teams)]:
             filled_teams[team].append(player)
         for player in inexperienced_players[index::len(teams)]:
-           filled_teams[team].append(player)
+            filled_teams[team].append(player)
     return filled_teams
 
 def main_menu_selection(teams):
+    """
+    Display program menu and get input from user
+    """
     print("BASKETBALL TEAM STATS TOOL\n")
     print("---- MAIN MENU ----\n")
     print("Here are your choices:")
+    print("\n  Display Team Stats:")
     for team in teams:
-        print(f"{team[1]+1} - Display Team Stats - {team[0]}")
-    choice = input("Any other key - Quit\n")
+        print(f"    Enter {team[1]+1} for {team[0]}")
+    print("\n  Any other key - Quit")
+    choice = input("Enter an option > ")
     try:
         return int(choice) - 1
-    except (ValueError, KeyboardInterrupt):
+    except ValueError:
         return -1
 
 
 def print_team(teamname, filled_team):
+    """
+    Print stats for one team to console
+    """
     print(f"\nTeam {teamname} Stats:")
     print('-----------------------------')
     print(f'Total Players = {len(filled_team)}')
     experienced = len([player for player in filled_team if player['experience']])
     inexperienced = len([player for player in filled_team if not player['experience']])
-    print(f'-- Experienced Players = {experienced}')
-    print(f'-- Inexperienced Players = {inexperienced}')
+    print(f'Total Experienced: {experienced}')
+    print(f'Total Inexperienced: {inexperienced}')
+    height = sum([(player['height']) for player in filled_team]) / len(filled_team)
+    print(f'Average height: {height:.1f} inches')
     print('\nPlayers on Team:')
     print_string = ', '.join([player['name'] for player in filled_team])
     print(f'  {print_string}')
@@ -102,7 +94,8 @@ def print_team(teamname, filled_team):
     print_string = ', '.join(guardians)
     print(f"  {print_string}")
     print('\n\n')
-
+    input("Press ENTER to continue")
+    print('\n')
 
 
 if __name__ == "__main__":
